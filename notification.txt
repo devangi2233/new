@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.Win32;
+using MySql.Data.MySqlClient;
+
+namespace WindowsFormsApp3
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ////lblDateTime.Text = DateTime.Now.ToString();
+
+
+            //DateTime message =  Convert.ToDateTime(DateTime.Now.ToString());
+            //MessageBox.Show("Notification: Hello Devangi Welcome ." );
+
+
+
+            ////Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run
+
+            //string appName = "WindowsFormApp3";
+            //string appPath = Application.ExecutablePath;
+
+            //using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            //{
+            //    key.SetValue(appName, appPath);
+            //}
+
+
+            //string MyConnection2 = "SERVER=localhost;DATABASE=customer;UID=root;PASSWORD=root;";
+            //MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);
+            //MyConn2.Open();
+
+            //string insertQuery = "INSERT INTO notification (start_datetime, end_datetime) VALUES (@message, @Timestamp)";
+            //MySqlCommand MyCommand2 = new MySqlCommand(insertQuery, MyConn2);
+            //MyCommand2.Parameters.AddWithValue("@message", message);
+            //MyCommand2.Parameters.AddWithValue("@Timestamp", null);
+            //MyCommand2.ExecuteNonQuery();
+
+            //MyConn2.Close();
+            //this.Close();
+
+            DateTime now = DateTime.Now;
+            MessageBox.Show("Notification: Hello Devangi, Welcome.");
+
+            // Register the application to run on Windows startup
+            string appName = "WindowsFormApp3";
+            string appPath = Application.ExecutablePath;
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                key.SetValue(appName, appPath);
+            }
+
+            string MyConnection2 = "SERVER=localhost;DATABASE=customer;UID=root;PASSWORD=root;";
+            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);
+            MyConn2.Open();
+            string insertQuery = "INSERT INTO notification (start_datetime) VALUES (@now)";
+            MySqlCommand MyCommand2 = new MySqlCommand(insertQuery, MyConn2);
+            MyCommand2.Parameters.AddWithValue("@now", now);
+            MyCommand2.ExecuteNonQuery();
+            MyConn2.Close();
+
+            SystemEvents.SessionEnding += SystemEvents_SessionEnding;
+            this.Close();
+        }
+
+        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
+        {
+            DateTime shutdownTime = DateTime.Now;
+            MessageBox.Show("Notification: Hello Devangi, Welcome.");
+            string MyConnection2 = "SERVER=localhost;DATABASE=customer;UID=root;PASSWORD=root;";
+            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);
+            MyConn2.Open();
+            string updateQuery = "UPDATE notification SET end_datetime = @shutdownTime";
+            MySqlCommand MyCommand2 = new MySqlCommand(updateQuery, MyConn2);
+            MyCommand2.Parameters.AddWithValue("@shutdownTime", shutdownTime);
+            MyCommand2.ExecuteNonQuery();
+            MyConn2.Close();
+        }
+
+
+
+
+    }
+
+       
+    }
+
