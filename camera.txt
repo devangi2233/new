@@ -1,0 +1,55 @@
+using AForge.Video.DirectShow;
+using AForge.Video;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace crud_operation
+{
+    public partial class Form3 : Form
+    {
+        public Form3()
+        {
+            InitializeComponent();
+           
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+         
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+            FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
+            // Check if any video devices are available
+            if (videoDevices.Count > 0)
+            {
+                VideoCaptureDevice videoSource = new VideoCaptureDevice(videoDevices[0].MonikerString);
+
+                // Check if the camera is running
+                if (videoSource.IsRunning)
+                {
+                    MessageBox.Show("Camera is On");
+                }
+                else
+                {
+                    MessageBox.Show("Camera is off");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No video devices found.");
+            }
+        }
+    }
+    }
+
